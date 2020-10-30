@@ -21,7 +21,7 @@
 	}
 
  dependencies {
-	        implementation 'com.github.Dboy233:ImageCheckBox:1.0'
+	      implementation 'com.github.Dboy233:ImageCheckBox:1.0.1'
  }
   
 ```
