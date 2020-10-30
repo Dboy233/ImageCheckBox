@@ -11,7 +11,7 @@
 ####         app:offDrawable="@mipmap/ic_image_check_off"
 ####         app:waitDrawable="@mipmap/ic_image_wait"
 
-[]("img_off.png") [](img_check.png) [](img_wait.png)
+  ![](img_off.png) ![](img_check.png) ![](img_wait.png)
 
 ``` 
 
