@@ -1,3 +1,4 @@
+# [![](https://jitpack.io/v/Dboy233/ImageCheckBox.svg)](https://jitpack.io/#Dboy233/ImageCheckBox)
 # ImageCheckBox
 
 
@@ -9,3 +10,18 @@
 ###         app:onDrawable="@mipmap/ic_image_check_on"
 ###         app:offDrawable="@mipmap/ic_image_check_off"
 ###         app:waitDrawable="@mipmap/ic_image_wait"
+
+``` 
+
+ allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+
+ dependencies {
+	        implementation 'com.github.Dboy233:ImageCheckBox:1.0'
+ }
+  
+```
