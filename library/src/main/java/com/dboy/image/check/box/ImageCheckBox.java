@@ -13,6 +13,10 @@ import android.view.View;
 
 
 public class ImageCheckBox extends View {
+    //画布范围
+    private final Rect dst = new Rect();
+    //绘制范围
+    private final Rect src = new Rect();
     /**
      * 选中状态
      */
@@ -21,7 +25,6 @@ public class ImageCheckBox extends View {
      * 中间等待状态
      */
     boolean isWait = false;
-
     private int width;
     private int height;
     private Paint checkPaint;
@@ -36,7 +39,7 @@ public class ImageCheckBox extends View {
     /**
      * 点击事件监听器
      */
-    private OnClickListener mOnClickListener = new OnClickListener() {
+    private final OnClickListener mOnClickListener = new OnClickListener() {
         @Override
         public void onClick(View view) {
             isWait = false;
@@ -53,6 +56,9 @@ public class ImageCheckBox extends View {
     private int offDrawableId;
     //等待桩体的图片
     private int waitDrawableID;
+    private Bitmap mOnBitmap;
+    private Bitmap mOffBitmap;
+    private Bitmap mWaitBitmap;
 
     public ImageCheckBox(Context context) {
         this(context, null);
@@ -69,6 +75,11 @@ public class ImageCheckBox extends View {
             onDrawableId = t.getResourceId(R.styleable.ImageCheckBox_onDrawable, R.mipmap.ic_image_check_on);
             offDrawableId = t.getResourceId(R.styleable.ImageCheckBox_offDrawable, R.mipmap.ic_image_check_off);
             waitDrawableID = t.getResourceId(R.styleable.ImageCheckBox_waitDrawable, R.mipmap.ic_image_wait);
+
+            mOnBitmap = BitmapFactory.decodeResource(getResources(), onDrawableId);
+            mOffBitmap = BitmapFactory.decodeResource(getResources(), offDrawableId);
+            mWaitBitmap = BitmapFactory.decodeResource(getResources(), waitDrawableID);
+
             isCheck = t.getBoolean(R.styleable.ImageCheckBox_checked, false);
             this.setOnClickListener(mOnClickListener);
             doNotOtherSetOnclick = true;
@@ -99,20 +110,31 @@ public class ImageCheckBox extends View {
         //是否是等待状态
         if (!isWait) {
             if (isCheck) {
-                fieldBitmap = BitmapFactory.decodeResource(getResources(), onDrawableId);
+                fieldBitmap = mOnBitmap;
             } else {
-                fieldBitmap = BitmapFactory.decodeResource(getResources(), offDrawableId);
+                fieldBitmap = mOffBitmap;
             }
         } else {
-            fieldBitmap = BitmapFactory.decodeResource(getResources(), waitDrawableID);
+            fieldBitmap = mWaitBitmap;
         }
+        //资源绘制范围
+        src.set(0, 0, fieldBitmap.getWidth(), fieldBitmap.getHeight());
+        //画布范围
+        dst.set(getPaddingLeft(), getPaddingTop(), width - getPaddingRight(), height - getPaddingBottom());
 
-        if (fieldBitmap == null) {
-            return;
-        }
-        @SuppressLint("DrawAllocation") Rect src = new Rect(0, 0, fieldBitmap.getWidth(), fieldBitmap.getHeight());//资源绘制范围
-        @SuppressLint("DrawAllocation") Rect dst = new Rect(0 + getPaddingLeft(), 0 + getPaddingTop(), width - getPaddingRight(), height - getPaddingBottom());//画布范围
         canvas.drawBitmap(fieldBitmap, src, dst, checkPaint);
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+
+    }
+
+    @Override
+    public void layout(int l, int t, int r, int b) {
+        super.layout(l, t, r, b);
+
     }
 
     /**
@@ -166,6 +188,10 @@ public class ImageCheckBox extends View {
         return result;
     }
 
+    public boolean isWait() {
+        return isWait;
+    }
+
     /**
      * @param wait 等待状态
      */
@@ -180,10 +206,6 @@ public class ImageCheckBox extends View {
                 invalidate();
             }
         }
-    }
-
-    public boolean isWait() {
-        return isWait;
     }
 
     public boolean isCheck() {
