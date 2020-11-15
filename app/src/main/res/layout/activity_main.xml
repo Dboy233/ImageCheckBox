@@ -8,8 +8,8 @@
 
     <com.dboy.image.check.box.ImageCheckBox
         android:id="@+id/mImageCheckBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="100dp"
         app:onDrawable="@mipmap/ic_image_check_on"
         app:offDrawable="@mipmap/ic_image_check_off"
         app:waitDrawable="@mipmap/ic_image_wait"
@@ -22,7 +22,8 @@
         android:id="@+id/mWaitBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="set checkbox wait"
+        android:text="set checkbox wait 等待状态"
+        android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:onClick="onWaitClick"

@@ -1,7 +1,7 @@
 package com.dboy.image.check.box;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -59,6 +59,10 @@ public class ImageCheckBox extends View {
     private Bitmap mOnBitmap;
     private Bitmap mOffBitmap;
     private Bitmap mWaitBitmap;
+    /**
+     * 默认内边距
+     */
+    private int defPadding;
 
     public ImageCheckBox(Context context) {
         this(context, null);
@@ -72,14 +76,18 @@ public class ImageCheckBox extends View {
         super(context, attrs, defStyleAttr);
         try {
             TypedArray t = getContext().obtainStyledAttributes(attrs, R.styleable.ImageCheckBox);
-            onDrawableId = t.getResourceId(R.styleable.ImageCheckBox_onDrawable, R.mipmap.ic_image_check_on);
-            offDrawableId = t.getResourceId(R.styleable.ImageCheckBox_offDrawable, R.mipmap.ic_image_check_off);
-            waitDrawableID = t.getResourceId(R.styleable.ImageCheckBox_waitDrawable, R.mipmap.ic_image_wait);
-
-            mOnBitmap = BitmapFactory.decodeResource(getResources(), onDrawableId);
-            mOffBitmap = BitmapFactory.decodeResource(getResources(), offDrawableId);
-            mWaitBitmap = BitmapFactory.decodeResource(getResources(), waitDrawableID);
-
+            onDrawableId = t.getResourceId(R.styleable.ImageCheckBox_onDrawable, -1);
+            offDrawableId = t.getResourceId(R.styleable.ImageCheckBox_offDrawable, -1);
+            waitDrawableID = t.getResourceId(R.styleable.ImageCheckBox_waitDrawable, -1);
+            if (onDrawableId != -1) {
+                mOnBitmap = BitmapFactory.decodeResource(getResources(), onDrawableId);
+            }
+            if (offDrawableId != -1) {
+                mOffBitmap = BitmapFactory.decodeResource(getResources(), offDrawableId);
+            }
+            if (waitDrawableID != -1) {
+                mWaitBitmap = BitmapFactory.decodeResource(getResources(), waitDrawableID);
+            }
             isCheck = t.getBoolean(R.styleable.ImageCheckBox_checked, false);
             this.setOnClickListener(mOnClickListener);
             doNotOtherSetOnclick = true;
@@ -87,6 +95,11 @@ public class ImageCheckBox extends View {
             e.printStackTrace();
         }
         init();
+    }
+
+    public static int dp2px(final float dpValue) {
+        final float scale = Resources.getSystem().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
     }
 
     @Override
@@ -117,24 +130,31 @@ public class ImageCheckBox extends View {
         } else {
             fieldBitmap = mWaitBitmap;
         }
-        //资源绘制范围
-        src.set(0, 0, fieldBitmap.getWidth(), fieldBitmap.getHeight());
-        //画布范围
-        dst.set(getPaddingLeft(), getPaddingTop(), width - getPaddingRight(), height - getPaddingBottom());
-
-        canvas.drawBitmap(fieldBitmap, src, dst, checkPaint);
+        if (fieldBitmap != null) {
+            //资源绘制范围
+            src.set(0, 0, fieldBitmap.getWidth(), fieldBitmap.getHeight());
+            //取最小高度或宽度 保证比例正确
+            int maxWidth = Math.max(width, height);
+            int drawWidth = Math.min(width, height);
+            //画布范围
+            dst.set(getPaddingLeft(), getPaddingTop(), drawWidth - getPaddingRight(), drawWidth - getPaddingBottom());
+            //画布位移到中心
+            if (width > height) {
+                dst.offset((maxWidth - drawWidth) / 2, 0);
+            } else if (height > width) {
+                dst.offset(0, (maxWidth - drawWidth) / 2);
+            }
+            canvas.drawBitmap(fieldBitmap, src, dst, checkPaint);
+        }
     }
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-
-    }
-
-    @Override
-    public void layout(int l, int t, int r, int b) {
-        super.layout(l, t, r, b);
-
+        if (getPaddingLeft() == 0 && getPaddingTop() == 0 && getPaddingRight() == 0 && getPaddingBottom() == 0) {
+            defPadding = dp2px(4);
+            setPadding(defPadding, defPadding, defPadding, defPadding);
+        }
     }
 
     /**
@@ -147,13 +167,13 @@ public class ImageCheckBox extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        width = measureWidth(widthMeasureSpec);
-        height = measureHeight(heightMeasureSpec);
+        width = measureSize(widthMeasureSpec);
+        height = measureSize(heightMeasureSpec);
         setMeasuredDimension(width, height);
     }
 
-    private int measureWidth(int measureSpec) {
-        int result = 200;
+    private int measureSize(int measureSpec) {
+        int result = dp2px(40);
         int specMode = MeasureSpec.getMode(measureSpec);
         int specSize = MeasureSpec.getSize(measureSpec);
         switch (specMode) {
@@ -166,24 +186,7 @@ public class ImageCheckBox extends View {
             case MeasureSpec.EXACTLY:
                 result = specSize;
                 break;
-        }
-        return result;
-    }
-
-    private int measureHeight(int measureSpec) {
-        int result = 200;
-        int specMode = MeasureSpec.getMode(measureSpec);
-        int specSize = MeasureSpec.getSize(measureSpec);
-        switch (specMode) {
-            case MeasureSpec.UNSPECIFIED:
-                result = specSize;
-                break;
-            case MeasureSpec.AT_MOST:
-                result = Math.min(result, specSize);
-                break;
-            case MeasureSpec.EXACTLY:
-                result = specSize;
-                break;
+            default:
         }
         return result;
     }
