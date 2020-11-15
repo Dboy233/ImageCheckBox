@@ -27,20 +27,6 @@
          app:checked="true"
 ```
 
-```
-
- allprojects {
-		repositories {
-			...
-			maven { url 'https://jitpack.io' }
-		}
-	}
-
- dependencies {
-	      implementation 'com.github.Dboy233:ImageCheckBox:1.0.1'
- }
-
-```
   ![](img_off.png) ![](img_check.png) ![](img_wait.png)
 
 
