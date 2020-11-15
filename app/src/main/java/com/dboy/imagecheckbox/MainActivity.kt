@@ -12,15 +12,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         mImageCheckBox.setOnCheckListener {
-            Log.d("ImageCheckBox", "check = " + it)
+            Log.d("ImageCheckBox", "check " + it)
         }
         mImageCheckBox.setOnClickListener {
-            Log.d("ImageCheckBox", "onclick ")
+            Log.d("ImageCheckBox", "onClick "+mImageCheckBox.isCheck)
         }
-        mImageCheckBox.setCheck(false,false)
+        mImageCheckBox.setCheck(false, false)
+        mImageCheckBox.setCheck(true, true)
     }
 
     fun onWaitClick(view: View) {
-        mImageCheckBox.isWait = true
+        mImageCheckBox.setWait(!mImageCheckBox.isWait, false)
     }
 }

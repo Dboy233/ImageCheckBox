@@ -217,9 +217,17 @@ public class ImageCheckBox extends View implements View.OnClickListener {
      * @param wait 等待状态
      */
     public void setWait(boolean wait) {
+        setWait(wait, false);
+    }
+
+    /**
+     * @param wait           等待状态
+     * @param notifyListener 是否通知回调；只有在wait=false时进行判断
+     */
+    public void setWait(boolean wait, boolean notifyListener) {
         this.isWait = wait;
         if (!isWait) {
-            setCheck(true);
+            setCheck(isCheck, notifyListener);
         } else {
             if (waitDrawableID == 0) {
                 throw new UnsupportedOperationException("没有设置等待状态的图片  app:waitDrawable");
