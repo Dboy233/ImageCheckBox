@@ -12,57 +12,72 @@ import android.util.AttributeSet;
 import android.view.View;
 
 
-public class ImageCheckBox extends View {
-    //画布范围
-    private final Rect dst = new Rect();
-    //绘制范围
-    private final Rect src = new Rect();
+public class ImageCheckBox extends View implements View.OnClickListener {
+    /**
+     * 画布范围
+     */
+    protected final Rect dst = new Rect();
+    /**
+     * 绘制范围
+     */
+    protected final Rect src = new Rect();
     /**
      * 选中状态
      */
-    boolean isCheck = true;
+    protected boolean isCheck = true;
     /**
      * 中间等待状态
      */
-    boolean isWait = false;
-    private int width;
-    private int height;
-    private Paint checkPaint;
+    protected boolean isWait = false;
     /**
-     * 不允许外部调用setOnClickListener
+     * 控件宽度
      */
-    private boolean doNotOtherSetOnclick = false;
+    protected int width;
+    /**
+     * 控件高度
+     */
+    protected int height;
+    /**
+     * 画笔
+     */
+    protected Paint checkPaint;
     /**
      * 回调
      */
-    private OnCheckListener mOnCheckListener;
+    protected OnCheckListener mOnCheckListener;
     /**
-     * 点击事件监听器
+     * 开启状态图片
      */
-    private final OnClickListener mOnClickListener = new OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            isWait = false;
-            isCheck = !isCheck;
-            if (mOnCheckListener != null) {
-                mOnCheckListener.onCheck(isCheck);
-            }
-            invalidate();
-        }
-    };
-    //开启状态图片
-    private int onDrawableId;
-    //关闭状态图片
-    private int offDrawableId;
-    //等待桩体的图片
-    private int waitDrawableID;
-    private Bitmap mOnBitmap;
-    private Bitmap mOffBitmap;
-    private Bitmap mWaitBitmap;
+    protected int onDrawableId;
+    /**
+     * 关闭状态图片
+     */
+    protected int offDrawableId;
+    /**
+     * 等待状态的图片
+     */
+    protected int waitDrawableID;
+    /**
+     * 开启Bitmap
+     */
+    protected Bitmap mOnBitmap;
+    /**
+     * 关闭Bitmap
+     */
+    protected Bitmap mOffBitmap;
+    /**
+     * 等待Bitmap
+     */
+    protected Bitmap mWaitBitmap;
     /**
      * 默认内边距
      */
-    private int defPadding;
+    protected int defPadding;
+    /**
+     * 外部onclick
+     */
+    protected OnClickListener mUserClickListener;
+
 
     public ImageCheckBox(Context context) {
         this(context, null);
@@ -88,29 +103,29 @@ public class ImageCheckBox extends View {
             if (waitDrawableID != -1) {
                 mWaitBitmap = BitmapFactory.decodeResource(getResources(), waitDrawableID);
             }
-            isCheck = t.getBoolean(R.styleable.ImageCheckBox_checked, false);
-            this.setOnClickListener(mOnClickListener);
-            doNotOtherSetOnclick = true;
+            isCheck = t.getBoolean(R.styleable.ImageCheckBox_checked, isCheck);
+            this.setOnClickListener(this);
+            t.recycle();
         } catch (Exception e) {
             e.printStackTrace();
         }
         init();
     }
 
-    public static int dp2px(final float dpValue) {
+    public int dp2px(final float dpValue) {
         final float scale = Resources.getSystem().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
     }
 
     @Override
     public void setOnClickListener(OnClickListener onClickListener) {
-        if (doNotOtherSetOnclick) {
-            return;
+        if (onClickListener != this) {
+            mUserClickListener = onClickListener;
         }
-        super.setOnClickListener(onClickListener);
+        super.setOnClickListener(this);
     }
 
-    private void init() {
+    protected void init() {
         checkPaint = new Paint();
         checkPaint.setAntiAlias(true);
     }
@@ -172,7 +187,7 @@ public class ImageCheckBox extends View {
         setMeasuredDimension(width, height);
     }
 
-    private int measureSize(int measureSpec) {
+    protected int measureSize(int measureSpec) {
         int result = dp2px(40);
         int specMode = MeasureSpec.getMode(measureSpec);
         int specSize = MeasureSpec.getSize(measureSpec);
@@ -191,6 +206,9 @@ public class ImageCheckBox extends View {
         return result;
     }
 
+    /**
+     * 是否是等待状态
+     */
     public boolean isWait() {
         return isWait;
     }
@@ -221,19 +239,37 @@ public class ImageCheckBox extends View {
      * @param isCheck 选中状态
      */
     public void setCheck(boolean isCheck) {
-        isWait = false;
-        this.isCheck = isCheck;
-        invalidate();
+        setCheck(isCheck, false);
     }
 
     /**
-     * 设置选中状态并通知回调
+     * 设置选中状态不通知回调方法
      *
-     * @param isCheck 选中状态
+     * @param isCheck        选中状态
+     * @param notifyListener 是否通知回调方法
      */
-    public void setCheckChangeListener(boolean isCheck) {
-        this.isCheck = !isCheck;
-        mOnClickListener.onClick(this);
+    public void setCheck(boolean isCheck, boolean notifyListener) {
+        isWait = false;
+        this.isCheck = isCheck;
+        if (notifyListener) {
+            this.isCheck = !isCheck;
+            this.onClick(this);
+        } else {
+            invalidate();
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        isWait = false;
+        isCheck = !isCheck;
+        if (mOnCheckListener != null) {
+            mOnCheckListener.onCheck(isCheck);
+        }
+        if (mUserClickListener != null) {
+            mUserClickListener.onClick(view);
+        }
+        invalidate();
     }
 
     public interface OnCheckListener {

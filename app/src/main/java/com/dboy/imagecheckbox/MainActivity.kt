@@ -14,7 +14,10 @@ class MainActivity : AppCompatActivity() {
         mImageCheckBox.setOnCheckListener {
             Log.d("ImageCheckBox", "check = " + it)
         }
-        mImageCheckBox.setCheckChangeListener(false)
+        mImageCheckBox.setOnClickListener {
+            Log.d("ImageCheckBox", "onclick ")
+        }
+        mImageCheckBox.setCheck(false,false)
     }
 
     fun onWaitClick(view: View) {
