@@ -10,6 +10,7 @@
         android:id="@+id/mImageCheckBox"
         android:layout_width="50dp"
         android:layout_height="100dp"
+
         app:onDrawable="@mipmap/ic_image_check_on"
         app:offDrawable="@mipmap/ic_image_check_off"
         app:waitDrawable="@mipmap/ic_image_wait"

@@ -24,6 +24,7 @@
          app:onDrawable="@mipmap/ic_image_check_on"
          app:offDrawable="@mipmap/ic_image_check_off"
          app:waitDrawable="@mipmap/ic_image_wait"
+         app:checked="true"
 ```
 
 ```
