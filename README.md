@@ -35,6 +35,10 @@ dependencies {
     public void setWait(boolean wait, boolean notifyListener)
 ```
 
-<img src="img_off.png" style="zoom: 25%;" /> <img src="img_check.png" style="zoom: 25%;" /> <img src="img_wait.png" style="zoom:25%;" />
 
+
+
+| 未选中 | 选中 | 等待 |
+| :--: | :--: | :--: |
+|   <img src="img_off.png" style="zoom: 25%;" />   |    <img src="img_check.png" style="zoom: 25%;" />    |   <img src="img_wait.png" style="zoom:25%;" />   |
 
