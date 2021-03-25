@@ -44,7 +44,7 @@ public class ImageCheckBox extends View implements View.OnClickListener {
     /**
      * 回调
      */
-    protected OnCheckListener mOnCheckListener;
+    protected CheckBoxChangeListener mCheckBoxChangeListener;
     /**
      * 开启状态图片
      */
@@ -70,10 +70,6 @@ public class ImageCheckBox extends View implements View.OnClickListener {
      */
     protected Bitmap mWaitBitmap;
     /**
-     * 默认内边距
-     */
-    protected int defPadding;
-    /**
      * 外部onclick
      */
     protected OnClickListener mUserClickListener;
@@ -89,26 +85,22 @@ public class ImageCheckBox extends View implements View.OnClickListener {
 
     public ImageCheckBox(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        try {
-            TypedArray t = getContext().obtainStyledAttributes(attrs, R.styleable.ImageCheckBox);
-            onDrawableId = t.getResourceId(R.styleable.ImageCheckBox_onDrawable, -1);
-            offDrawableId = t.getResourceId(R.styleable.ImageCheckBox_offDrawable, -1);
-            waitDrawableID = t.getResourceId(R.styleable.ImageCheckBox_waitDrawable, -1);
-            if (onDrawableId != -1) {
-                mOnBitmap = BitmapFactory.decodeResource(getResources(), onDrawableId);
-            }
-            if (offDrawableId != -1) {
-                mOffBitmap = BitmapFactory.decodeResource(getResources(), offDrawableId);
-            }
-            if (waitDrawableID != -1) {
-                mWaitBitmap = BitmapFactory.decodeResource(getResources(), waitDrawableID);
-            }
-            isCheck = t.getBoolean(R.styleable.ImageCheckBox_checked, isCheck);
-            this.setOnClickListener(this);
-            t.recycle();
-        } catch (Exception e) {
-            e.printStackTrace();
+        TypedArray t = getContext().obtainStyledAttributes(attrs, R.styleable.ImageCheckBox);
+        onDrawableId = t.getResourceId(R.styleable.ImageCheckBox_onDrawable, -1);
+        offDrawableId = t.getResourceId(R.styleable.ImageCheckBox_offDrawable, -1);
+        waitDrawableID = t.getResourceId(R.styleable.ImageCheckBox_waitDrawable, -1);
+        if (onDrawableId != -1) {
+            mOnBitmap = BitmapFactory.decodeResource(getResources(), onDrawableId);
         }
+        if (offDrawableId != -1) {
+            mOffBitmap = BitmapFactory.decodeResource(getResources(), offDrawableId);
+        }
+        if (waitDrawableID != -1) {
+            mWaitBitmap = BitmapFactory.decodeResource(getResources(), waitDrawableID);
+        }
+        isCheck = t.getBoolean(R.styleable.ImageCheckBox_checked, isCheck);
+        super.setOnClickListener(this);
+        t.recycle();
         init();
     }
 
@@ -122,7 +114,6 @@ public class ImageCheckBox extends View implements View.OnClickListener {
         if (onClickListener != this) {
             mUserClickListener = onClickListener;
         }
-        super.setOnClickListener(this);
     }
 
     protected void init() {
@@ -163,20 +154,11 @@ public class ImageCheckBox extends View implements View.OnClickListener {
         }
     }
 
-    @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
-        if (getPaddingLeft() == 0 && getPaddingTop() == 0 && getPaddingRight() == 0 && getPaddingBottom() == 0) {
-            defPadding = dp2px(4);
-            setPadding(defPadding, defPadding, defPadding, defPadding);
-        }
-    }
-
     /**
      * 状态改变事件监听器
      */
-    public void setOnCheckListener(OnCheckListener onCheckListener) {
-        mOnCheckListener = onCheckListener;
+    public void setOnCheckBoxChangeListener(CheckBoxChangeListener checkBoxChangeListener) {
+        mCheckBoxChangeListener = checkBoxChangeListener;
     }
 
     @Override
@@ -229,10 +211,10 @@ public class ImageCheckBox extends View implements View.OnClickListener {
         if (!isWait) {
             setCheck(isCheck, notifyListener);
         } else {
-            if (waitDrawableID == 0) {
+            if (waitDrawableID == 0 || mWaitBitmap == null) {
                 throw new UnsupportedOperationException("没有设置等待状态的图片  app:waitDrawable");
             } else {
-                invalidate();
+                postInvalidateOnAnimation();
             }
         }
     }
@@ -263,7 +245,7 @@ public class ImageCheckBox extends View implements View.OnClickListener {
             this.isCheck = !isCheck;
             this.onClick(this);
         } else {
-            invalidate();
+            postInvalidateOnAnimation();
         }
     }
 
@@ -271,16 +253,16 @@ public class ImageCheckBox extends View implements View.OnClickListener {
     public void onClick(View view) {
         isWait = false;
         isCheck = !isCheck;
-        if (mOnCheckListener != null) {
-            mOnCheckListener.onCheck(isCheck);
+        if (mCheckBoxChangeListener != null) {
+            mCheckBoxChangeListener.onCheck(isCheck);
         }
         if (mUserClickListener != null) {
             mUserClickListener.onClick(view);
         }
-        invalidate();
+        postInvalidateOnAnimation();
     }
 
-    public interface OnCheckListener {
+    public interface CheckBoxChangeListener {
         void onCheck(boolean isCheck);
     }
 }
