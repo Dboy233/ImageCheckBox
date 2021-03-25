@@ -33,6 +33,31 @@ dependencies {
      * @param notifyListener 是否通知回调；只有在wait=false时进行判断
      */
     public void setWait(boolean wait, boolean notifyListener)
+        
+    /**
+     * 是否是等待状态
+     */
+    public boolean isWait()
+	
+	/**
+	 *是否选中
+	 */
+	public boolean isCheck() 
+        
+    /**
+     * 设置选中状态不通知回调方法
+     *
+     * @param isCheck 选中状态
+     */
+    public void setCheck(boolean isCheck) 
+        
+    /**
+     * 设置选中状态不通知回调方法
+     *
+     * @param isCheck        选中状态
+     * @param notifyListener 是否通知回调方法
+     */
+    public void setCheck(boolean isCheck, boolean notifyListener) 
 ```
 
 
