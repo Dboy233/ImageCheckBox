@@ -39,10 +39,10 @@ dependencies {
      */
     public boolean isWait()
 	
-	/**
-	 *是否选中
-	 */
-	public boolean isCheck() 
+    /**
+     *是否选中
+     */
+    public boolean isCheck() 
         
     /**
      * 设置选中状态不通知回调方法
