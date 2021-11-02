@@ -4,13 +4,14 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_main.*
+import com.dboy.image.check.box.ImageCheckBox
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        val mImageCheckBox = findViewById<ImageCheckBox>(R.id.mImageCheckBox)
         mImageCheckBox.setOnCheckBoxChangeListener {
             Log.d("ImageCheckBox", "check->$it ")
         }
@@ -27,6 +28,7 @@ class MainActivity : AppCompatActivity() {
         //设置等待状态 不通知回调
 //        mImageCheckBox.setWait(!mImageCheckBox.isWait, false)
 //        设置等待状态 通知回调 当isWait==false的时候才会通知选中和未选中状态
+        val mImageCheckBox = findViewById<ImageCheckBox>(R.id.mImageCheckBox)
         mImageCheckBox.setWait(!mImageCheckBox.isWait, true)
     }
 }
