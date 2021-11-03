@@ -6,12 +6,12 @@
 allprojects {
 		repositories {
 			...
-			maven { url 'https://jitpack.io' }
+			mavenCentral()
 		}
 }
 
 dependencies {
-	      implementation 'com.github.Dboy233:ImageCheckBox:{latest release}'
+	      implementation 'com.github.Dboy233:ImageCheckBox:2.0.1'
 }
 ```
 
