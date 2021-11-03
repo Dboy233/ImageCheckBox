@@ -1,5 +1,3 @@
-# [![](https://jitpack.io/v/Dboy233/ImageCheckBox.svg)](https://jitpack.io/#Dboy233/ImageCheckBox)
-
 ## ImageCheckBox
 
 ```groovy
