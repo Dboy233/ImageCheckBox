@@ -1,15 +1,17 @@
 ## ImageCheckBox
 
+![Maven Central](https://img.shields.io/maven-central/v/io.github.dboy233/ImageCheckBox?style=plastic)
+
 ```groovy
 allprojects {
-		repositories {
-			...
-			mavenCentral()
-		}
+	repositories {
+		...
+		mavenCentral()
+	}
 }
 
 dependencies {
-	      implementation 'com.github.Dboy233:ImageCheckBox:2.0.1'
+	implementation 'com.github.Dboy233:ImageCheckBox:${last-version}'
 }
 ```
 
