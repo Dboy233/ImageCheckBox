@@ -11,7 +11,7 @@ allprojects {
 }
 
 dependencies {
-	implementation 'com.github.Dboy233:ImageCheckBox:${last-version}'
+	implementation 'io.github.dboy233:ImageCheckBox:${last-version}'
 }
 ```
 
