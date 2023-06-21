@@ -12,6 +12,9 @@ import android.util.AttributeSet;
 import android.view.View;
 
 
+/**
+ * 图片 CheckBox ，设置选中和未选中图片，还允许设置等待状态。
+ */
 public class ImageCheckBox extends View implements View.OnClickListener {
     /**
      * 画布范围
@@ -21,6 +24,10 @@ public class ImageCheckBox extends View implements View.OnClickListener {
      * 绘制范围
      */
     protected final Rect src = new Rect();
+    /**
+     * 绘制 Paint
+     */
+    private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     /**
      * 选中状态
      */
@@ -70,7 +77,6 @@ public class ImageCheckBox extends View implements View.OnClickListener {
      */
     protected OnClickListener mUserClickListener;
 
-
     public ImageCheckBox(Context context) {
         this(context, null);
     }
@@ -110,8 +116,6 @@ public class ImageCheckBox extends View implements View.OnClickListener {
             mUserClickListener = onClickListener;
         }
     }
-
-    Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     @Override
     protected void onDraw(Canvas canvas) {
