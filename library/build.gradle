@@ -2,8 +2,8 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
 
 
-int lib_version_code = 4
-String lib_version_name = "2.0.1"
+int lib_version_code = 5
+String lib_version_name = "2.0.3"
 
 android {
     compileSdk rootProject.ext.compileSdk
