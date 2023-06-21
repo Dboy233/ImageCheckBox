@@ -1,13 +1,9 @@
 apply plugin: 'com.android.library'
-//apply plugin: 'com.vanniktech.maven.publish'
+apply plugin: 'maven-publish'
 
-//allprojects {
-//    plugins.withId("com.vanniktech.maven.publish") {
-//        mavenPublish {
-//            sonatypeHost = "S01"
-//        }
-//    }
-//}
+
+int lib_version_code = 4
+String lib_version_name = "2.0.1"
 
 android {
     compileSdk rootProject.ext.compileSdk
@@ -15,8 +11,8 @@ android {
     defaultConfig {
         minSdk rootProject.ext.minSdk
         targetSdk rootProject.ext.targetSdk
-        versionCode 4
-        versionName "2.0.1"
+        versionCode lib_version_code
+        versionName lib_version_name
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
@@ -32,6 +28,20 @@ android {
 }
 
 dependencies {
-//    implementation 'androidx.appcompat:appcompat:1.2.0'
 }
 
+
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = 'com.github.Dboy233'
+                artifactId = 'ImageCheckBox'
+                version = lib_version_name
+            }
+        }
+    }
+
+}
