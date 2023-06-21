@@ -38,10 +38,6 @@ public class ImageCheckBox extends View implements View.OnClickListener {
      */
     protected int height;
     /**
-     * 画笔
-     */
-    protected Paint checkPaint;
-    /**
      * 回调
      */
     protected CheckBoxChangeListener mCheckBoxChangeListener;
@@ -101,7 +97,6 @@ public class ImageCheckBox extends View implements View.OnClickListener {
         isCheck = t.getBoolean(R.styleable.ImageCheckBox_checked, isCheck);
         super.setOnClickListener(this);
         t.recycle();
-        init();
     }
 
     public int dp2px(final float dpValue) {
@@ -116,10 +111,7 @@ public class ImageCheckBox extends View implements View.OnClickListener {
         }
     }
 
-    protected void init() {
-        checkPaint = new Paint();
-        checkPaint.setAntiAlias(true);
-    }
+    Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -137,20 +129,21 @@ public class ImageCheckBox extends View implements View.OnClickListener {
             fieldBitmap = mWaitBitmap;
         }
         if (fieldBitmap != null) {
-            //资源绘制范围
+            //图片范围
             src.set(0, 0, fieldBitmap.getWidth(), fieldBitmap.getHeight());
             //取最小高度或宽度 保证比例正确
-            int maxWidth = Math.max(width, height);
-            int drawWidth = Math.min(width, height);
-            //画布范围
-            dst.set(getPaddingLeft(), getPaddingTop(), drawWidth - getPaddingRight(), drawWidth - getPaddingBottom());
-            //画布位移到中心
-            if (width > height) {
-                dst.offset((maxWidth - drawWidth) / 2, 0);
-            } else if (height > width) {
-                dst.offset(0, (maxWidth - drawWidth) / 2);
-            }
-            canvas.drawBitmap(fieldBitmap, src, dst, checkPaint);
+            int minSize = Math.min(width, height);
+            int drawWidth = minSize - Math.max(getPaddingRight(), getPaddingLeft());
+            int drawHeight = minSize - Math.max(getPaddingTop(), getPaddingBottom());
+            //绘制区域
+            dst.set(0, 0, Math.min(drawWidth, drawHeight), Math.min(drawWidth, drawHeight));
+
+            //绘制区域居中
+            int centerX = (getWidth() - dst.width()) / 2;
+            int centerY = (getHeight() - dst.height()) / 2;
+            dst.offset(centerX, centerY);
+
+            canvas.drawBitmap(fieldBitmap, src, dst, paint);
         }
     }
 
@@ -175,13 +168,11 @@ public class ImageCheckBox extends View implements View.OnClickListener {
         int specSize = MeasureSpec.getSize(measureSpec);
         switch (specMode) {
             case MeasureSpec.UNSPECIFIED:
+            case MeasureSpec.EXACTLY:
                 result = specSize;
                 break;
             case MeasureSpec.AT_MOST:
                 result = Math.min(result, specSize);
-                break;
-            case MeasureSpec.EXACTLY:
-                result = specSize;
                 break;
             default:
         }
@@ -198,6 +189,7 @@ public class ImageCheckBox extends View implements View.OnClickListener {
     /**
      * @param wait 等待状态
      */
+    @SuppressWarnings("unused")
     public void setWait(boolean wait) {
         setWait(wait, false);
     }
@@ -228,6 +220,7 @@ public class ImageCheckBox extends View implements View.OnClickListener {
      *
      * @param isCheck 选中状态
      */
+    @SuppressWarnings("unused")
     public void setCheck(boolean isCheck) {
         setCheck(isCheck, false);
     }
